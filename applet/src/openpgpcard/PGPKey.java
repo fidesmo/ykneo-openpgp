@@ -28,26 +28,30 @@ public class PGPKey implements ISO7816 {
 	public static final short EXPONENT_SIZE = 17;
 	public static final short EXPONENT_SIZE_BYTES = 3;
 	public static final short FP_SIZE = 20;
+        public static final short ATTRIBUTES_SIZE = 6;
+        public static final short TIME_SIZE = 4;
 
-	private KeyPair key;
-	private byte[] fp;
-	private byte[] time = { 0x00, 0x00, 0x00, 0x00 };
-	private byte[] attributes = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x03 };
+	private KeyPair key = new KeyPair(KeyPair.ALG_RSA_CRT, KEY_SIZE);
+	private byte[] fp = new byte[FP_SIZE];
+	private byte[] time = new byte[TIME_SIZE];
+	private byte[] attributes = new byte[ATTRIBUTES_SIZE];
 	private static byte[] tmpBuf;
 
-	public PGPKey() {
-		key = new KeyPair(KeyPair.ALG_RSA_CRT, KEY_SIZE);
-
-		fp = new byte[FP_SIZE];
+        public void initialize() {
+                Util.arrayFillNonAtomic(fp, (short) 0, (short) fp.length, (byte) 0);
 		Util.arrayFillNonAtomic(fp, (short) 0, (short) fp.length, (byte) 0);
-
+		Util.arrayFillNonAtomic(time, (short) 0, (short) time.length, (byte) 0);
+                attributes[0] = (byte)0x01;
 		Util.setShort(attributes, (short) 1, KEY_SIZE);
 		Util.setShort(attributes, (short) 3, EXPONENT_SIZE);
+                attributes[5] = 0x03;
 
 		if(tmpBuf == null) {
 			tmpBuf = JCSystem.makeTransientByteArray((short) (KEY_SIZE_BYTES / 2), JCSystem.CLEAR_ON_DESELECT);
 		}
-	}
+                key.getPublic().clearKey();
+                key.getPrivate().clearKey();
+        }
 
 	/**
 	 * Generate the key pair.
