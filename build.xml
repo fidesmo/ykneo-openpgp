@@ -5,7 +5,10 @@
   <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="ant-javacard.jar"/>
   <target name="applet">
     <javacard>
-      <cap aid="A0:00:00:06:17:00:EC:5E:FF:D8" output="PGP.cap" sources="applet/src">
+      <cap jckit="oracle_javacard_sdks/jc222_kit" aid="A0:00:00:06:17:00:EC:5E:FF:D8" output="PGP22.cap" sources="applet/src">
+        <applet class="openpgpcard.OpenPGPApplet" aid="A0:00:00:06:17:00:EC:5E:FF:D8:00:00:00:01:00:00"/>
+      </cap>
+      <cap jckit="oracle_javacard_sdks/jc304_kit" aid="A0:00:00:06:17:00:EC:5E:FF:D8" output="PGP30.cap" sources="applet/src">
         <applet class="openpgpcard.OpenPGPApplet" aid="A0:00:00:06:17:00:EC:5E:FF:D8:00:00:00:01:00:00"/>
       </cap>
     </javacard>
